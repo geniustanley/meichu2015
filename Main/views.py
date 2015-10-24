@@ -52,3 +52,9 @@ def Fetch(mon,day):
 	print end
 	detail = ReportDetail.objects.filter(monday__gt=start)
 	return detail
+
+
+def Radar(request):
+	return render_to_response('radar.html',RequestContext(request,locals()))
+
+
