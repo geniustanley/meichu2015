@@ -15,9 +15,11 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('listptr', models.DecimalField(max_digits=8, decimal_places=0)),
-                ('latitude', models.DecimalField(max_digits=8, decimal_places=7)),
-                ('longtitude', models.DecimalField(max_digits=8, decimal_places=7)),
-                ('time', models.CharField(max_length=20)),
+                ('latitude', models.DecimalField(max_digits=20, decimal_places=7)),
+                ('longitude', models.DecimalField(max_digits=20, decimal_places=7)),
+                ('year', models.DecimalField(max_digits=5, decimal_places=0)),
+                ('monday', models.DecimalField(max_digits=5, decimal_places=0)),
+                ('time', models.CharField(default=b'', max_length=20)),
             ],
         ),
         migrations.CreateModel(

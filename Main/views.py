@@ -14,28 +14,28 @@ def MainPageList(request):
 
 def CreateReportDetail(request):
 
-	if 'longtitude' in request.POST :
+	if 'longitude' in request.POST :
 		longitude = request.POST['longitude']
 		full_time = request.POST['time']
 		latitude = request.POST['latitude']
-		mon_day = full_time.split('/')[1]+full_time.split('/')[2]
+		monday = full_time.split('/')[1]+full_time.split('/')[2]
 		time = full_time.split('/')[3]+full_time.split('/')[4]
 		year = full_time.split('/')[0]
 		checkID = request.POST['ID']
 		r = ReportDetail (
 				listptr = checkID, 
-				longtitude = longtitude,
+				longitude = longitude,
 				 latitude = latitude,
 				 time = time,
-				 mon_day = mon_day,
+				 monday = monday,
 				 year = year,
 				 )
 		r.save()
 
 	else :
-		checkID = request.POST['RID']
+		checkID = request.POST['ID']
 	
-	cur_date = int(strftime("%d"))-1
+	cur_date = strftime("%d")
 	cur_mon = strftime("%m")
 	cur_year = strftime("%Y")
 
@@ -48,6 +48,7 @@ def Fetch(mon,day):
 
 	start = (int(mon)-1)*100+int(day)
 	end = int(mon)*100 + int(day)
-
-	detail = ReportDetail.objects.filter(monday__gt(start)).filter(monday__lt(end))
+	print start
+	print end
+	detail = ReportDetail.objects.filter(monday__gt=start)
 	return detail

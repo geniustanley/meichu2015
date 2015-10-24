@@ -7,10 +7,10 @@
 
 <button onclick="getLocation()">Try It</button>
 
-{% if monthly_data %}
+{% if monthlydata %}
 
-{% for e in monthly_data %}
-	<h1>{{latitude}}</h1>
+{% for e in monthlydata %}
+	<h1>{{e.time}}</h1>
 {% endfor %}
 {% endif%}
 
@@ -20,7 +20,7 @@
 <form action="" method="post"> {% csrf_token %}
 <button type="submit" id="subbtn" onclick="add()">+</button>
 <input type="hidden" id="latitude" name="latitude" value="">
-<input type="hidden" id="longtitude"name="longtitude" value="">
+<input type="hidden" id="longitude"name="longitude" value="">
 <input type="hidden" id="time"name="time" value="">
 <input type="hidden" id="ID"name="ID" value="{{checkID}}">
 </form>
@@ -40,7 +40,7 @@ $(document).ready(function(){
 });
 function getPosition(position) {
 	$("#latitude").val( position.coords.latitude ); 
-	$("#longtitude").val( position.coords.longitude);
+	$("#longitude").val( position.coords.longitude);
 }
 
 function showError(error) {
