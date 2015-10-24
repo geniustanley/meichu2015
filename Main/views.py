@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from Main.models import ReportList
 from Main.models import ReportDetail
 from django.template import RequestContext
@@ -12,9 +12,19 @@ def MainPageList(request):
 	return render_to_response('index.html',RequestContext(request,locals()))
 
 
-def CreateReportDetail(request):
+def CreateReportDetail(request,ListId):
 
-	if 'longitude' in request.POST :
+	checkID = ListId
+	
+	cur_date = strftime("%d")
+	cur_mon = strftime("%m")
+	cur_year = strftime("%Y")
+
+	monthlydata = Fetch(cur_mon, cur_date, checkID)
+
+	return render_to_response('detail.html',RequestContext(request,locals()))
+
+def NewData(request):
 		longitude = request.POST['longitude']
 		full_time = request.POST['time']
 		latitude = request.POST['latitude']
@@ -32,23 +42,15 @@ def CreateReportDetail(request):
 				 )
 		r.save()
 
-	else :
-		checkID = request.POST['ID']
-	
-	cur_date = strftime("%d")
-	cur_mon = strftime("%m")
-	cur_year = strftime("%Y")
+		return redirect('/detail/%s' % checkID)
 
-	monthlydata = Fetch(cur_mon, cur_date)
+		
 
-	return render_to_response('detail.html',RequestContext(request,locals()))
-
-
-def Fetch(mon,day):
+def Fetch(mon,day,checkid):
 
 	start = (int(mon)-1)*100+int(day)
 	end = int(mon)*100 + int(day)
 	print start
 	print end
-	detail = ReportDetail.objects.filter(monday__gt=start)
+	detail = ReportDetail.objects.filter(listptr=checkid).filter(monday__gt=start).filter(monday__lte=end)
 	return detail
