@@ -5,9 +5,9 @@
 
 {% for e in RList %}
 <h1> {{e.id}} </h1>
-<form action="./detail" method="post"> {%csrf_token%}
-<button type="submit" name="ID" value="{{e.id}}"> {{e.reportname}}</button>
-</form>
+
+<a href="./detail/{{e.id}}"> {{e.reportname}}</a>
+
 {%endfor%}
 </body>
 </html>

@@ -15,12 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from Main.views import MainPageList
-from Main.views import CreateReportDetail
-from Main.views import Radar
+from Main.views import *
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 	url(r'^$',MainPageList),
-	url(r'^detail',CreateReportDetail),
+	url(r'^detail/(?P<ListId>[0-9]+)/',CreateReportDetail),
+	url(r'^new/',NewData),
 	url(r'^radar',Radar),
 ]
