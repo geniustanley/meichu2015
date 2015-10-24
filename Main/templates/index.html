@@ -4,12 +4,10 @@
 <body>
 
 {% for e in RList %}
-
 <h1> {{e.id}} </h1>
-<h2> {{e.reportname}}</h2>
-
+<form action="./detail" method="post"> {%csrf_token%}
+<button type="submit" name="RID" value="{{e.id}}"> {{e.reportname}}</button>
+</form>
 {%endfor%}
-
-
 </body>
 </html>
