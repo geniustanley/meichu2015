@@ -6,7 +6,7 @@ from Main.models import ReportDetail
 class ListAdmin(admin.ModelAdmin):
 	list_display = ('reportname',)
 class DetailAdmin(admin.ModelAdmin):
-	list_display = ('listptr','latitude','longtitude','mon_day','time')
+	list_display = ('listptr','latitude','longitude','monday','time')
 
 admin.site.register(ReportList, ListAdmin)
 admin.site.register(ReportDetail, DetailAdmin)

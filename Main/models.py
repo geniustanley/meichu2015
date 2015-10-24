@@ -9,7 +9,7 @@ class ReportList(models.Model):
 class ReportDetail(models.Model):
 	listptr = models.DecimalField(max_digits = 8,decimal_places=0)
 	latitude = models.DecimalField(max_digits = 20, decimal_places = 7)
-	longtitude = models.DecimalField(max_digits = 20, decimal_places = 7)
+	longitude = models.DecimalField(max_digits = 20, decimal_places = 7)
 	year = models.CharField(max_length = 5, default="")
-	mon_day = models.CharField(max_length = 20,default="")
+	monday = models.CharField(max_length = 20,default="") #Month and Day
 	time = models.CharField(max_length = 20, default="")
