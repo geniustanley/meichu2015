@@ -1,0 +1,62 @@
+<html>
+<head>
+</head>
+<body>
+
+<form action="/new/" method="post"> {% csrf_token %}
+<button type="submit" id="subbtn" onclick="add()">+</button>
+<input type="hidden" id="latitude" name="latitude" value="">
+<input type="hidden" id="longitude"name="longitude" value="">
+<input type="hidden" id="time"name="time" value="">
+<input type="hidden" id="ID"name="ID" value="{{checkID}}">
+<input type="hidden" id="bornyear" name="bornyear" value="1995">
+</form>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script>
+
+
+$(document).ready(function(){
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(getPosition, showError);
+    	} 
+	else {
+ 	       alert("Geolocation is not supported by this browser.");
+	    }
+});
+function getPosition(position) {
+	$("#latitude").val( position.coords.latitude ); 
+	$("#longitude").val( position.coords.longitude);
+	add();
+//	$("#subbtn").click();
+}
+
+function showError(error) {
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            x.innerHTML = "User denied the request for Geolocation."
+            break;
+        case error.POSITION_UNAVAILABLE:
+            x.innerHTML = "Location information is unavailable."
+            break;
+        case error.TIMEOUT:
+            x.innerHTML = "The request to get user location timed out."
+            break;
+        case error.UNKNOWN_ERROR:
+            x.innerHTML = "An unknown error occurred."
+            break;
+    }
+}
+
+function add(){
+	var currentdate = new Date();
+	var time = currentdate.getFullYear()+'/'
+			+(currentdate.getMonth()+1)+'/'
+			+currentdate.getDate()+'/'
+			+currentdate.getHours()+'/'
+			+currentdate.getMinutes()+'/'
+			+currentdate.getSeconds();
+	$("#time").val(time);	
+}
+</script>
+

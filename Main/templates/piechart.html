@@ -1,0 +1,497 @@
+<!DOCTYPE html>{% load staticfiles %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chart</title>
+    <!-- Compiled and minified CSS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/css/materialize.min.css">
+    <link rel="stylesheet" href="{% static 'gmap.css' %}">
+
+    <style>
+    .side-nav .collapsible > li {
+    	background: white;
+    }
+    .side-nav .collapsible > li:hover {
+    	background: white;
+    }
+        input[type=range] {
+            border: 3px solid white;
+            border-radius: 3px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            background: white;
+            border: none;
+            height: 1px;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+        input[type=range]:focus::-webkit-slider-runnable-track {
+            background: orange;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            margin-top: -9px;
+            background: orange;
+        }
+        .thumb {
+            background-color: #07d8b9 !important;
+        }
+        .thumd .value {
+            color: red !important;
+        }
+        .progress .indeterminate {
+            background-color: orange;
+        }
+    </style>
+</head>
+
+<body class="grey darken-4">
+    <ul id="slide-out" class="side-nav fixed">
+	<li><a href="/">Back</a></li>
+        <li class="no-padding">
+            <ul class="collapsible collapsible-accordion">
+                <li class="active">
+                    <a class="active collapsible-header bold">圖表<i class="mdi-navigation-arrow-drop-down"></i></a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li><a href="{% url 'gmap' reportId %}">地圖</a></li>
+                            <li class="active"><a href="#">圓餅圖</a></li>
+                            <li><a href="{% url 'radar' reportId %}">雷逹圖</a></li>
+                            <li><a href="{% url 'linechart' reportId %}">折線圖</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <div class="content  grey darken-4" style="width: 100%; height: 100%; background: #efefef;">
+        <div class="section"></div>
+
+        <div class="row">
+            <div class="col s8 offset-s2 teal accent-3  card">
+                <div class="progress" style="display: none;">
+                    <div class="indeterminate"></div>
+                </div>
+
+                <div class="section">
+                    <h4 class="white-text">天數內累積回報人數</h4>
+                </div>
+                <form>
+                    <p class="range-field">
+                        <input type="range" id="day" name="day" min="1" max="30" />
+                    </p>
+                </form>
+                <a class="waves-effect waves-light btn right orange" id="getData"><i class="material-icons right">send</i>查看</a>
+
+
+
+                <canvas id="myChart" style="margin-top: 13px;"></canvas>
+
+                <a class="orange modal-trigger waves-effect waves-light btn right" href="#modal1"
+                id="trigger" style="margin-bottom: 10px;">發表看法</a>
+
+
+                <fb:login-button scope="public_profile,email,publish_actions" onlogin="checkLoginState(); Materialize.toast('已發布至Facebook', 4000);"
+                class="right" style="margin-right: 13px;">
+                </fb:login-button>
+            </div>
+        </div>
+        <div id="status" style="display:none;">
+        </div>
+
+        <div id="modal1" class="modal modal-fixed-footer">
+            <div class="modal-content">
+                <h4>對這份資料有什麼看法呢？</h4>
+                <input type="text" value="" id="msg" />
+                <canvas id="tmpCanvas"></canvas>
+            </div>
+            <div class="modal-footer">
+                <a class="modal-action modal-close waves-effect waves-green btn-flat " onclick="upload()">發布到 FB</a>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/js/materialize.min.js"></script>
+<script src="{% static 'Chart.js' %}"></script>
+<script src="{% static 'piechart.js' %}"></script>
+<script>
+    $('document').ready(function()
+    {
+        $('.modal-trigger').leanModal();
+
+    })
+
+    $('#getData').click(function()
+    {
+        $('.progress').show(0);
+        $.ajax(
+        {
+            url: "/reporttime/{{ reportId }}",
+            data:
+            {
+                day: $('#day').val()
+            },
+            success: function(result)
+            {
+                console.log(result);
+                for (i = 0; i < 6; i++)
+                {
+                    myNewChart.segments[i].value = result
+                        .result[i];
+                    console.log(result.result[i]);
+                }
+                myNewChart.update();
+                $('.progress').hide(0);
+            }
+        });
+    });
+
+    var data = [
+        {
+            value: 0,
+            color: "#F7464A",
+            highlight: "#FF5A5E",
+            label: "7:00 ~ 11:00 回報數量 "
+        },
+        {
+            value: 0,
+            color: "#C6FF00",
+            highlight: "#EEFF41",
+            label: "11:00 ~ 15:00 回報數量"
+        },
+        {
+            value: 0,
+            color: "#FFC107",
+            highlight: "#FFCA28",
+            label: "15:00 ~ 19:00 回報數量"
+        },
+        {
+            value: 0,
+            color: "#00E5FF",
+            highlight: "#18FFFF",
+            label: "19:00 ~ 23:00 回報數量"
+        },
+        {
+            value: 0,
+            color: "#00E676",
+            highlight: "#69F0AE",
+            label: "23:00 ~ 3:00 回報數量"
+        },
+        {
+            value: 0,
+            color: "#AB47BC",
+            highlight: "#BA68C8",
+            label: "3:00 ~ 7:00 回報數量"
+        }
+
+    ];
+
+    // Get context with jQuery - using jQuery's .get() method.
+    var ctx = $("#myChart").get(0).getContext("2d");
+    // This will get the first returned node in the jQuery collection.
+    //var myRadarChart = new Chart(ctx).Radar(data, {});
+
+
+
+    var myNewChart = new Chart(ctx).PolarArea(data,
+    {
+        animateScale: true,
+        animationSteps: 70,
+        segmentStrokeColor: "rgba(255,255,255,0.75)",
+        scaleBackdropColor: "rgba(255,255,255,0.75)",
+
+    });
+
+
+
+    // This is called with the results from from FB.getLoginStatus().
+    function statusChangeCallback(response)
+    {
+        console.log('statusChangeCallback');
+        console.log(response);
+        // The response object is returned with a status field that lets the
+        // app know the current login status of the person.
+        // Full docs on the response object can be found in the documentation
+        // for FB.getLoginStatus().
+        if (response.status === 'connected')
+        {
+            // Logged into your app and Facebook.
+            testAPI();
+        }
+        else if (response.status === 'not_authorized')
+        {
+            // The person is logged into Facebook, but not your app.
+            document.getElementById('status').innerHTML =
+                'Please log ' +
+                'into this app.';
+        }
+        else
+        {
+            // The person is not logged into Facebook, so we're not sure if
+            // they are logged into this app or not.
+            document.getElementById('status').innerHTML =
+                'Please log ' +
+                'into Facebook.';
+        }
+    }
+
+    // This function is called when someone finishes with the Login
+    // Button.  See the onlogin handler attached to it in the sample
+    // code below.
+    function checkLoginState()
+    {
+        FB.getLoginStatus(function(response)
+        {
+            statusChangeCallback(response);
+        });
+    }
+
+    window.fbAsyncInit = function()
+    {
+        FB.init(
+        {
+            appId: '741075659332423',
+            cookie: true, // enable cookies to allow the server to access 
+            // the session
+            xfbml: true, // parse social plugins on this page
+            version: 'v2.2' // use version 2.2
+        });
+
+        // Now that we've initialized the JavaScript SDK, we call 
+        // FB.getLoginStatus().  This function gets the state of the
+        // person visiting this page and can return one of three states to
+        // the callback you provide.  They can be:
+        //
+        // 1. Logged into your app ('connected')
+        // 2. Logged into Facebook, but not your app ('not_authorized')
+        // 3. Not logged into Facebook and can't tell if they are logged into
+        //    your app or not.
+        //
+        // These three cases are handled in the callback function.
+
+        FB.getLoginStatus(function(response)
+        {
+            statusChangeCallback(response);
+        });
+
+    };
+
+    // Load the SDK asynchronously
+    (function(d, s, id)
+    {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "http://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    // Here we run a very simple test of the Graph API after login is
+    // successful.  See statusChangeCallback() for when this call is made.
+    function testAPI()
+    {
+        console.log('Welcome!  Fetching your information.... ');
+        FB.api('/me', function(response)
+        {
+            console.log('Successful login for: ' + response.name);
+            document.getElementById('status').innerHTML =
+                'Thanks for logging in, ' + response.name +
+                '!';
+        });
+    }
+
+
+    $('#trigger').click(function()
+    {
+        var c = document.getElementById("tmpCanvas");
+        c.width = $('#myChart').width();
+        c.height = $('#myChart').height();
+        var ctx2 = c.getContext("2d");
+        ctx2.rect(0, 0, window.innerWidth, window.innerHeight);
+        ctx2.fillStyle = "#1de9b6";
+        ctx2.fill();
+        ctx2.drawImage(document.getElementById('myChart'), 0, 0);
+
+    })
+
+
+    function upload()
+    {
+        var c = document.getElementById("tmpCanvas");
+
+        /*
+			c.width = $('#myChart').width();
+			c.height = $('#myChart').height();
+			var ctx2 = c.getContext("2d");
+			ctx2.rect(0, 0, window.innerWidth, window.innerHeight);
+			ctx2.fillStyle = "#00bcd4";
+			ctx2.fill();
+			ctx2.drawImage(document.getElementById('myChart'), 0, 0);
+			*/
+
+        console.log(c.toDataURL('image/jpeg', 1));
+
+
+        var dataURL = c.toDataURL();
+        var onlyData = dataURL.substring(dataURL.indexOf(',') + 1,
+            dataURL.length);
+        var decoded = atob(onlyData);
+        var imageIwillPost = getFormData(decoded);
+
+        console.log(c.toDataURL());
+        /*FB.api(
+            "/me/photos",
+            "POST",
+            {
+                'source': decoded
+            },
+            function(response)
+            {
+                if (response && !response.error)
+                {
+					console.log(response);
+                    
+				} else {
+					console.log(response);
+				}
+            }
+            
+        );*/
+        var authToken = FB.getAuthResponse().accessToken;
+        console.log(authToken);
+        var blob = dataURItoBlob(c.toDataURL());
+        var fd = new FormData();
+        fd.append("access_token", authToken);
+        fd.append("source", blob);
+        fd.append("message", $('#msg').val());
+
+        $.ajax(
+        {
+            url: "https://graph.facebook.com/me/photos?access_token=" +
+                authToken,
+            type: "POST",
+            data: fd,
+            processData: false,
+            contentType: false,
+            cache: false,
+            success: function(data)
+            {
+                console.log("success " + data);
+            },
+            error: function(shr, status, data)
+            {
+                console.log("error " + data + " Status " +
+                    shr.status);
+            },
+            complete: function()
+            {
+                console.log("Posted to facebook");
+            }
+        });
+    }
+
+    function getFormData(imageData)
+    {
+        var boundary = '----ThisIsTheBoundary1234567890';
+        var formData = '--' + boundary + '\r\n'
+        formData +=
+            'Content-Disposition: form-data; name="source"; filename="' +
+            'image-vaun.png' + '"\r\n';
+        formData += 'Content-Type: ' + 'PNG' + '\r\n\r\n';
+        for (var i = 0; i < imageData.length; ++i)
+        {
+            formData += String.fromCharCode(imageData[i] & 0xff);
+        }
+        formData += '\r\n';
+        formData += '--' + boundary + '\r\n';
+
+        return formData;
+    }
+
+    function dataURItoBlob(dataURI)
+    {
+        var byteString = atob(dataURI.split(',')[1]);
+        var ab = new ArrayBuffer(byteString.length);
+        var ia = new Uint8Array(ab);
+        for (var i = 0; i < byteString.length; i++)
+        {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([ab],
+        {
+            type: 'image/png'
+        });
+    }
+
+
+    var Base64Binary = {
+        _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+
+        /* will return a  Uint8Array type */
+        decodeArrayBuffer: function(input)
+        {
+            var bytes = (input.length / 4) * 3;
+            var ab = new ArrayBuffer(bytes);
+            this.decode(input, ab);
+
+            return ab;
+        },
+
+        decode: function(input, arrayBuffer)
+        {
+            //get last chars to see if are valid
+            var lkey1 = this._keyStr.indexOf(input.charAt(input.length -
+                1));
+            var lkey2 = this._keyStr.indexOf(input.charAt(input.length -
+                2));
+
+            var bytes = (input.length / 4) * 3;
+            if (lkey1 == 64) bytes--; //padding chars, so skip
+            if (lkey2 == 64) bytes--; //padding chars, so skip
+
+            var uarray;
+            var chr1, chr2, chr3;
+            var enc1, enc2, enc3, enc4;
+            var i = 0;
+            var j = 0;
+
+            if (arrayBuffer)
+                uarray = new Uint8Array(arrayBuffer);
+            else
+                uarray = new Uint8Array(bytes);
+
+            input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+            for (i = 0; i < bytes; i += 3)
+            {
+                //get the 3 octects in 4 ascii chars
+                enc1 = this._keyStr.indexOf(input.charAt(j++));
+                enc2 = this._keyStr.indexOf(input.charAt(j++));
+                enc3 = this._keyStr.indexOf(input.charAt(j++));
+                enc4 = this._keyStr.indexOf(input.charAt(j++));
+
+                chr1 = (enc1 << 2) | (enc2 >> 4);
+                chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+                chr3 = ((enc3 & 3) << 6) | enc4;
+
+                uarray[i] = chr1;
+                if (enc3 != 64) uarray[i + 1] = chr2;
+                if (enc4 != 64) uarray[i + 2] = chr3;
+            }
+
+            return uarray;
+        }
+    }
+</script>
+
+</html>

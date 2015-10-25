@@ -1,0 +1,71 @@
+<!DOCTYPE html>{% load staticfiles %}
+<html lang="en" ng-app="gmapApp">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Chart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'gmap.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+    <style>
+    .side-nav .collapsible > li {
+    	background: white;
+    }
+    .side-nav .collapsible > li:hover {
+    	background: white;
+    }
+    </style>
+</head>
+
+<body ng-controller="GMapCtrl">
+    <ul id="slide-out" class="side-nav fixed">
+        <li class="no-padding">
+	    <li><a href="/">Back</a></li>
+            <ul class="collapsible collapsible-accordion">
+                <li class="active">
+                    <a class="active collapsible-header bold">圖表<i class="mdi-navigation-arrow-drop-down"></i></a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li class="active"><a href="#">地圖</a></li>
+                            <li><a href="{% url 'piechart' reportId %}">圓餅圖</a></li>
+                            <li><a href="{% url 'radar' reportId %}">雷逹圖</a></li>
+                            <li><a href="{% url 'linechart' reportId %}">折線圖</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+            <ul class="collapsible collapsible-accordion">
+                <li>
+                    <a class="collapsible-header bold">時段<i class="mdi-navigation-arrow-drop-down"></i></a>
+                    <div class="collapsible-body">
+                        <ul ng-repeat="t in timeSlot">
+                            <li ng-click="switchMarkers(t.id)" ng-class="{'active': timeSelected == $index}">
+                                <a href="#!">{$ t.start $} ~ {$ t.end $}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="content">
+        <div class="progress" style="margin: 0;">
+          <div class="indeterminate"></div>
+        </div>
+        <div id="map"></div>
+    </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/js/materialize.min.js"></script>
+    <script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
+    <script src="{% static 'gmap.js' %}"></script>
+    <script src="{% static 'gmap_ctrl.js' %}"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBWojlUNqz-UsA38Hun5Ugm7-XLhj8HaTM&callback=initMap">
+    </script>
+    <script>
+    	var reportId = {{ reportId }};
+    </script>
+</body>
+
+</html>

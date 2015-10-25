@@ -1,0 +1,16 @@
+html, body, .content, #map {
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+.content {
+	padding-left: 240px;
+}
+
+#slide-out .collapsible-header {
+	height: 64px;
+	line-height: 64px;
+}
+

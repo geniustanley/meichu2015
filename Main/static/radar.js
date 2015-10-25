@@ -136,35 +136,27 @@ var data = {
     datasets: [
         {
             label: "東區",
-            fillColor: "rgba(233, 30, 99, 0.4)",
-            strokeColor: "rgba(220,220,220,1)",
-            pointColor: "rgba(220,220,220,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(220,220,220,1)",
-            data: [65, 59, 90, 81, 56, 55, 40, 70, 30, 29, 90, 12, 28, 70, 78]
-        },
-        {
-            label: "安平區",
             fillColor: "rgba(238,255,65,0.4)",
             strokeColor: "rgba(151,187,205,1)",
             pointColor: "rgba(151,187,205,1)",
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        },
+        {
+            label: "安平區",
+            fillColor: "rgba(233, 30, 99, 0.4)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(151,187,205,1)",
-            data: [28, 48, 40, 19, 96, 27, 100, 50, 14, 23, 54, 23, 12, 64, 23]
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         }
     ]
 };
 
-var data2 = [
-	[12, 13, 14, 15, 16, 29, 18, 19, 20, 29, 22, 30, 24, 25, 26],
-	[22, 23, 24, 20, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36],
-	[32, 33, 34, 35, 36, 37, 29, 39, 40, 41, 42, 43, 20, 45, 46],
-	[42, 43, 44, 45, 100, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56],
-	[52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 100, 64, 65, 66],
-	[62, 63, 64, 65, 100, 67, 68, 59, 70, 71, 72, 73, 30, 75, 76]
-]
 
 // Get context with jQuery - using jQuery's .get() method.
 var ctx = $("#myChart").get(0).getContext("2d");
@@ -175,89 +167,6 @@ var myRadarChart = new Chart(ctx).Radar(data, {
 	pointLabelFontSize : 15,
 });
 
-var cur = 0;
-
-$('#2003').click(function() {
-	if(cur == 0) {
-		for(i = 0; i < 15; i++)
-			myRadarChart.datasets[0].points[i].value = data2[0][i];
-		cur = 1;
-	}
-	else {
-		for(i = 0; i < 15; i++)
-			myRadarChart.datasets[1].points[i].value = data2[0][i];
-		cur = 0;
-	}
-	myRadarChart.update();
-})
-
-$('#2004').click(function() {
-	if(cur == 0) {
-		for(i = 0; i < 15; i++)
-			myRadarChart.datasets[0].points[i].value = data2[1][i];
-		cur = 1;
-	}
-	else {
-		for(i = 0; i < 15; i++)
-			myRadarChart.datasets[1].points[i].value = data2[1][i];
-		cur = 0;
-	}
-	myRadarChart.update();
-})
-
-$('#2005').click(function() {
-	if(cur == 0) {
-		for(i = 0; i < 15; i++)
-			myRadarChart.datasets[0].points[i].value = data2[2][i];
-		cur = 1;
-	}
-	else {
-		for(i = 0; i < 15; i++)
-			myRadarChart.datasets[1].points[i].value = data2[2][i];
-		cur = 0;
-	}
-	myRadarChart.update();
-})
-
-$('#2006').click(function() {
-	if(cur == 0) {
-		for(i = 0; i < 15; i++)
-			myRadarChart.datasets[0].points[i].value = data2[3][i];
-		cur = 1;
-	}
-	else {
-		for(i = 0; i < 15; i++)
-			myRadarChart.datasets[1].points[i].value = data2[3][i];
-		cur = 0;
-	}
-	myRadarChart.update();
-})
-
-$('#2007').click(function() {
-	if(cur == 0) {
-		for(i = 0; i < 15; i++)
-			myRadarChart.datasets[0].points[i].value = data2[4][i];
-		cur = 1;
-	}
-	else {
-		for(i = 0; i < 15; i++)
-			myRadarChart.datasets[1].points[i].value = data2[4][i];
-		cur = 0;
-	}
-	myRadarChart.update();
-})
-
-$('#2008').click(function() {
-
-	if(cur == 0) {
-		for(i = 0; i < 15; i++)
-			myRadarChart.datasets[0].points[i].value = data2[5][i];
-		cur = 1;
-	}
-	else {
-		for(i = 0; i < 15; i++)
-			myRadarChart.datasets[1].points[i].value = data2[5][i];
-		cur = 0;
-	}
-	myRadarChart.update();
-})
+$('document').ready(function() {
+	$('select').material_select();
+});

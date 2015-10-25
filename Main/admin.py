@@ -4,9 +4,9 @@ from Main.models import ReportDetail
 # Register your models here.
 
 class ListAdmin(admin.ModelAdmin):
-	list_display = ('reportname',)
+	list_display = ('id','reportname',)
 class DetailAdmin(admin.ModelAdmin):
-	list_display = ('listptr','latitude','longitude','monday','time')
+	list_display = ('listptr','latitude','longitude','time')
 
 admin.site.register(ReportList, ListAdmin)
 admin.site.register(ReportDetail, DetailAdmin)

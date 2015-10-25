@@ -1,13 +1,272 @@
 <html>
 <head>
+    <meta charset="UTF-8">
+    <title>MayShow</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    {% load staticfiles %}
+    <script type="text/javascript" src="{% static 'jquery-1.11.2.min.js' %}"></script>
+    <link rel=stylesheet type="text/css" href="{% static 'index.css' %}">
 </head>
+
 <body>
+	
+	<img id ="back" src= "{% static 'pic/back.png' %}" style="z-index:-1">
 
-{% for e in RList %}
-<h1> {{e.id}} </h1>
+	<canvas id="draw_title" width="1000px" height="300px" ></canvas>
+	
+	<input id="skip" type="button" value="Skip" onclick="startDirect(1)">
 
-<a href="./detail/{{e.id}}"> {{e.reportname}}</a>
+	<div id ="light1" class="light"></div>
+	<div id ="light2" class="light"></div>
 
-{%endfor%}
+	<div class="title" id="title1">
+		安安大家好~這是一個可以讓每個人<br><br>
+		都能對社會有所貢獻的平台，我們希<br><br>
+		望可以藉由蒐集許多微小的位置和時<br><br>
+		間資料，建立出足以分析的big data<br><br> 
+	
+	</div>
+	<div class="title" id="title2">
+		假設今天有人對資料有需求，可以請<br><br>
+		平台上的大家互助合作，蒐集一些日<br><br>
+		常生活中與其相關的瑣碎資訊，一旦<br><br>
+		資料量足夠，便具有一定的參考價值<br><br>
+	
+	</div>
+	
+	<div class="title" id="title3">
+		請選擇一個目前急需DATA的項目<br>		
+	
+	</div>
+	<img src="{% static 'pic/char.png' %}" id = "char">
+	
+	<div id="black" onclick="endDirect(1)"></div>
+	<img src="{% static 'pic/phone.png' %}" id = "phone">
+	
+	<div class="title" id="title4">
+		利用APP來快速儲存發現DATA的位置<br><br>
+		GO~~~
+	</div>
+	
+
+	<div  id="button1" class="button_s" type="button" value="1" onclick="startDirect(1)" onmouseenter="stopAnim();"onmouseleave="">
+		
+		<img  id="img1" class="buttonImg" src="{% static 'pic/B001.png'%}">
+		<div id="label1" class="label_s">
+		<br>登革熱<br><br>
+		登革熱是最近相當嚴重<br>
+		的問題，如果可以搜集<br>
+		到更為完整的蚊子分佈<br>
+		資料，將有助於疫情的<br>
+		分析，所以各位<br>
+		OpenData戰士，當你<br>
+		發現該死的蚊子，一鍵<br>
+		記錄下來吧！
+	</div></div>
+	<div  id="button2" class="button_s" type="button" value="2" onclick="startDirect(2)"  onmouseenter="stopAnim();"onmouseover="">
+		
+		<img id="img2" class="buttonImg" src="{% static 'pic/B002.png' %}">
+		<div id="label2" class="label_s">
+		<br>垃圾<br><br>
+		垃圾造成了都市的髒亂<br>
+		亂問題，然而即便是垃<br>
+		圾也會有"聚集地"，透<br>
+		過一點一滴的紀錄，我<br>
+		們可以找出較常出現垃<br>
+		圾的地點，以做出對應<br>
+		措施或宣導～
+	</div></div>
+	<div  id="button3" class="button_s" type="button" value="3" onclick="startDirect(3)"  onmouseenter="stopAnim();"onmouseover="">
+		
+		<img id="img3" class="buttonImg" src="{% static 'pic/B003.png' %}">
+		<div id="label3" class="label_s">
+		<br>交通<br><br>
+		生活中交通佔了相多的<br>
+		時間，方便的大眾運輸<br>
+		工具尤為重要，但再密<br>
+		的交通網也有疏漏，所<br>
+		以當你需要卻沒有任何<br>
+		大眾交通工時，告訴我<br>
+		們ㄧ聲吧～<br>
+	</div></div>
+	
+	<input id="button4" type="button" value="前往統計頁面" onclick="directURL(dirIndex)">
+	
 </body>
+
+<script>
+	var dirIndex; 	
+	var isRun = true;
+
+	Init();
+	lightShow();
+	draw();
+
+	function Init(){
+		$("#button1").attr('style',  'left:10%');
+		$("#button2").attr('style',  'left:40%');
+		$("#button3").attr('style',  'left:70%');
+		$("#light1").attr('style',  'left:-80% ; top:15%');
+		$("#light2").attr('style',  'left:100%; top:35%');
+	}
+
+	function lightShow(){
+		$("#light1").animate({left:"0%" , opacity: "1"} , 2000);
+		$("#light2").animate({left:"20%" , opacity: "1"} , 2000);
+		setTimeout(function(){ $("#light1").animate({left:"100%" , opacity: "0"} , 1000);}, 3000);
+		setTimeout(function(){ $("#light2").animate({left:"-80%" , opacity: "0"} , 1000);}, 3000);
+		setTimeout(function(){ $("#draw_title").animate({top:"0%" , opacity: "0"} , 1000);}, 5000);
+		setTimeout(function(){ $("#char").animate({top:"5%" , opacity: "1"} , 1000);}, 6000);
+		setTimeout(function(){ $("#title1").animate({top:"20%" , opacity: "1"} , 1000);}, 6000);
+		setTimeout(function(){ $("#title1").animate({top:"0%" , opacity: "0"} , 1000);}, 13000);
+		setTimeout(function(){ $("#title2").animate({top:"20%" , opacity: "1"} , 1000);}, 13000);
+		setTimeout(function(){ $("#title2").animate({top:"0%" , opacity: "0"} , 1000);}, 20000);
+		setTimeout(function(){ $("#char").animate({top:"0%" , opacity: "0"} , 1000);}, 20000);
+		setTimeout(function(){ $("#title3").animate({top:"20%" , opacity: "1"} , {duration:1000 ,complete:buttonShow()});}, 20000);
+		
+	}
+
+	
+	function buttonShow(){
+
+		setTimeout(function(){ $("#button1").animate({bottom:"15%" , opacity: "0.5"} , 1000);}, 2000);
+		setTimeout(function(){ $("#button2").animate({bottom:"15%" , opacity: "0.5"} , 1000);}, 2500);
+		setTimeout(function(){ $("#button3").animate({bottom:"15%" , opacity: "0.5"} , 1000);}, 3000);
+		setTimeout(buttonAnim() , 3000);
+	}
+
+	function labelShow(index){
+		if(index==1)$("#label1").animate({  opacity: "1"} , 500);
+		else if(index==2)$("#label2").animate({  opacity: "1"} , 500);
+		else $("#label3").animate({  opacity: "1"} , 500);
+	}
+
+	function labelHide(index){
+		if(index==1)$("#label1").animate({  opacity: "0"} , 200);
+		else if(index==2)$("#label2").animate({  opacity: "0"} , 200);
+		else $("#label3").animate({  opacity: "0"} , 200);
+	}
+
+	function buttonAnim(){
+		if(!isRun)return;
+		console.log('qqq');
+		var ran_b = Math.floor(Math.random() * 10)-5+15;
+		var ran_l1 = Math.floor(Math.random() * 6)-3+10;
+		var ran_l2 = Math.floor(Math.random() * 6)-3+40;
+		var ran_l3 = Math.floor(Math.random() * 6)-3+70;
+		$("#button1").animate({bottom:ran_b+"%" , left:ran_l1+"%", opacity: "0.5"} , Math.floor(Math.random() * 1500)+500 );
+		$("#button2").animate({bottom:ran_b+"%" , left:ran_l2+"%", opacity: "0.5"} , Math.floor(Math.random() * 1500)+500);
+		$('#button3').animate({
+    		bottom:ran_b+"%" , left:ran_l3+"%", opacity: "0.5"}, {
+    			duration: Math.floor(Math.random() * 1500)+500 ,
+    			complete: function() { buttonAnim(); }
+	});
+		
+	}
+	function stopAnim(){
+		isRun = false;
+		$("#button1").stop;
+		$("#button2").stop;
+		$("#button3").stop;
+		
+	}
+	function startAnim(){
+		isRun = true;
+		buttonAnim();
+	}
+	
+	$(".button_s").hover(
+  		function() {
+    		$(this).animate({opacity: "1" , width:"25%" , height:"50%" , borderRadius: "30px"} , {
+    			duration:500 ,
+    			complete: function() { labelShow(  parseInt($(this).attr('value'))   ); 
+    			$("#img"+parseInt($(this).attr('value'))).animate({ opacity: "0"} ,500);
+    		}	
+	});
+    		
+  		}, function() {
+  			labelHide(parseInt($(this).attr('value'))); 
+    		$(this).animate({opacity: "0.5" , width:"20%" ,height:"35%" , borderRadius: "300px"} , {
+    			duration:500 ,
+    			complete: function() { labelHide(parseInt($(this).attr('value'))); 
+    			$("#img"+parseInt($(this).attr('value'))).animate({ opacity: "1"} ,500);
+    		}
+	});
+    		
+    		startAnim();
+  		}
+	);
+
+	function draw(){
+ 	
+	var ctx = document.getElementById("draw_title").getContext("2d");
+	var c = document.getElementById("draw_title");
+	dashLen = 220;
+	dashOffset = dashLen;
+	speed = 15;
+	txt = "Click2World";
+	x = 0 ; i = 0 ;
+	ctx.clearRect(x, 0, c.getAttribute("width"), c.getAttribute("height"));
+	ctx.font = "120px Lora,'Helvetica Neue',Helvetica,Arial,sans-serif";
+	ctx.lineJoin = "round";
+	//ctx.globalAlpha = 2/3;
+	ctx.strokeStyle = ctx.fillStyle = "#FFF";
+
+	(function loop(){
+
+
+	ctx.setLineDash([dashLen - dashOffset, dashOffset -speed]);
+	dashOffset -= speed;
+	ctx.strokeText(txt[i],x,90);
+	if(dashOffset > 0) requestAnimationFrame(loop);
+	else{
+	
+	ctx.fillText(txt[i],x,90);
+	dashOffset = dashLen;
+	x += ctx.measureText(txt[i++]).width + ctx.lineWidth * Math.random();
+	ctx.setTransform(1,0,0,1,0,3 * Math.random());
+	ctx.rotate(Math.random() * 0.005);
+
+	if ( i < txt.length) requestAnimationFrame(loop);
+    
+	}
+	})();
+	 
+     setTimeout(draw,10000);
+    
+	}
+
+	function startDirect(index){
+		dirIndex = index;
+		$("#black").attr('style','z-index:2');	
+		$("#button4").attr('style','z-index:3');	
+		$("#phone").attr('style','z-index:3');	
+		setTimeout(function(){ $("#black").animate({ opacity: "0.85"} , 1000);}, 0);
+		setTimeout(function(){ $("#title4").animate({top:"40%" , opacity: "1"} , 1000);}, 1000);
+		setTimeout(function(){ $("#button4").animate({top:"60%" , opacity: "1"} , 1000);}, 1000);
+		setTimeout(function(){ $("#phone").animate({left:"60%" , opacity: "1"} , 1000);}, 1000);
+		
+	}
+
+	function endDirect(index){
+		dirIndex = 0;
+		$("#black").attr('style','z-index:-1');	
+		$("#button4").attr('style','z-index:-1');	
+		$("#phone").attr('style','z-index:-1');	
+		setTimeout(function(){ $("#black").animate({ opacity: "0"} , 500);}, 0);
+		setTimeout(function(){ $("#title4").animate({top:"40%" , opacity: "0"} , 500);}, 0);
+		setTimeout(function(){ $("#button4").animate({top:"60%" , opacity: "0"} , 500);}, 0);
+		setTimeout(function(){ $("#phone").animate({left:"60%" , opacity: "0"} , 500);}, 0);
+		
+	}
+	function directURL(i){
+
+		var href = '/detail/'+i+'/gmap/';
+		window.location.href=href;
+
+	}
+
+
+</script>
+
 </html>

@@ -1,0 +1,28 @@
+<ul id="slide-out" class="side-nav fixed">
+<li class="no-padding">
+    <ul class="collapsible collapsible-accordion">
+	<li>
+	    <a class="collapsible-header bold">圖表<i class="mdi-navigation-arrow-drop-down"></i></a>
+	    <div class="collapsible-body">
+		<ul>
+		    <li>
+			<a href="#!">QQQ</a>
+		    </li>
+		</ul>
+	    </div>
+	</li>
+    </ul>
+    <ul class="collapsible collapsible-accordion">
+	<li>
+	    <a class="collapsible-header bold">時段<i class="mdi-navigation-arrow-drop-down"></i></a>
+	    <div class="collapsible-body">
+		<ul ng-repeat="t in timeSlot">
+		    <li ng-click="switchMarkers(t.id)" ng-class="{'active': timeSelected == $index}">
+			<a href="#!">{$ t.start $} ~ {$ t.end $}</a>
+		    </li>
+		</ul>
+	    </div>
+	</li>
+    </ul>
+</li>
+</ul>
